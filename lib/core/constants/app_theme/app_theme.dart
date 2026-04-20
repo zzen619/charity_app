@@ -37,7 +37,8 @@ class AppTheme {
       ),
     ),
 
-    cardTheme: CardTheme(
+    // ✅ CardThemeData بدل CardTheme
+    cardTheme: CardThemeData(
       color: AppColors.lightCardBg,
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -115,7 +116,8 @@ class AppTheme {
       ),
     ),
 
-    cardTheme: CardTheme(
+    // ✅ CardThemeData بدل CardTheme
+    cardTheme: CardThemeData(
       color: AppColors.darkCardBg,
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

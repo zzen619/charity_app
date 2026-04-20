@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/app_colors.dart';
+import '../core/constants/app_theme/theme_cubit.dart';
+import '../core/constants/app_theme/theme_state.dart';
+import '../features/home/ui/screens/home_screen.dart';
+import 'main_navigation_cubit.dart';
 
 class MainNavigationScreen extends StatelessWidget {
   const MainNavigationScreen({super.key});

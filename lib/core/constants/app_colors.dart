@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  // ── Primary (ثابت في الوضعين)
+  // ── Primary
   static const Color primary = Color(0xFF1A5C52);
   static const Color primaryLight = Color(0xFF1E6B5E);
   static const Color primaryDark = Color(0xFF0F3D35);
@@ -32,7 +32,15 @@ class AppColors {
   static const Color darkCardBg = Color(0xFF1E1E1E);
   static const Color darkStatCard = Color(0xFF163D36);
 
-  // ── Status (ثابت)
+  // ── Progress ✅ هذه هي الألوان الناقصة
+  static const Color progressBg = Color(0xFFE0E0E0);
+  static const Color progressFill = Color(0xFFC8960C);
+
+  // ── Shimmer
+  static const Color shimmerBase = Color(0xFFE0E0E0);
+  static const Color shimmerHigh = Color(0xFFF5F5F5);
+
+  // ── Status
   static const Color success = Color(0xFF2E7D32);
   static const Color error = Color(0xFFD32F2F);
   static const Color warning = Color(0xFFF57C00);

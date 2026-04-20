@@ -1,24 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'core/constants/app_theme/app_theme.dart';
 import 'core/constants/app_theme/theme_cubit.dart';
 import 'core/constants/app_theme/theme_state.dart';
+import 'features/home/logic/home_cubit.dart';
+import 'main_navigation/main_navigation_cubit.dart';
+import 'main_navigation/main_navigation_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const AtaaApp());
+
+  // تحميل الثيم المحفوظ قبل تشغيل التطبيق
+  final prefs = await SharedPreferences.getInstance();
+  final savedTheme = prefs.getString('theme_mode');
+  final initialMode = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light;
+
+  runApp(AtaaApp(initialThemeMode: initialMode));
 }
 
 class AtaaApp extends StatelessWidget {
-  const AtaaApp({super.key});
+  final ThemeMode initialThemeMode;
+  const AtaaApp({super.key, required this.initialThemeMode});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => ThemeCubit()),
-        //  BlocProvider(create: (_) => MainNavigationCubit()),
-        //   BlocProvider(create: (_) => HomeCubit()),
+        BlocProvider(create: (_) => ThemeCubit(initialMode: initialThemeMode)),
+        BlocProvider(create: (_) => MainNavigationCubit()),
+        BlocProvider(create: (_) => HomeCubit()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {
@@ -27,7 +39,7 @@ class AtaaApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
-            themeMode: themeState.mode, // ← هذا هو المفتاح
+            themeMode: themeState?.mode,
             home: const MainNavigationScreen(),
           );
         },
