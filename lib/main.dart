@@ -5,8 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/constants/app_theme/app_theme.dart';
 import 'core/constants/app_theme/theme_cubit.dart';
 import 'core/constants/app_theme/theme_state.dart';
-import 'features/home/logic/home_cubit.dart';
-import 'main_navigation/main_navigation_cubit.dart';
 import 'main_navigation/main_navigation_screen.dart';
 
 void main() async {
