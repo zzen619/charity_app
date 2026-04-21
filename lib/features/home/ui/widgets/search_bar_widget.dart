@@ -42,6 +42,8 @@ class SearchBarWidget extends StatelessWidget {
               color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
             ),
             border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(vertical: 16),
             fillColor: Colors.transparent,
             filled: true,

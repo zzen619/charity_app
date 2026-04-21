@@ -17,11 +17,6 @@ class UrgentCampaignsList extends StatelessWidget {
     this.onViewAll,
   });
 
-  List<CampaignModel> get _filtered {
-    if (selectedCategory == AppStrings.catAll) return campaigns;
-    return campaigns.where((c) => c.category == selectedCategory).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -29,7 +24,6 @@ class UrgentCampaignsList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header row
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
@@ -54,10 +48,9 @@ class UrgentCampaignsList extends StatelessWidget {
 
         const SizedBox(height: 12),
 
-        // Cards list
         SizedBox(
           height: 310,
-          child: _filtered.isEmpty
+          child: campaigns.isEmpty
               ? Center(
                   child: Text(
                     AppStrings.noResults,
@@ -71,9 +64,9 @@ class UrgentCampaignsList extends StatelessWidget {
               : ListView.builder(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.only(left: 16),
-                  itemCount: _filtered.length,
+                  itemCount: campaigns.length,
                   itemBuilder: (context, index) {
-                    return CampaignCard(campaign: _filtered[index]);
+                    return CampaignCard(campaign: campaigns[index]);
                   },
                 ),
         ),

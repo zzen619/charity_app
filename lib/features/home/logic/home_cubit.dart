@@ -6,7 +6,6 @@ import 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
 
-  // قائمة الكاتيغوري من AppStrings
   final List<String> categories = [
     AppStrings.catAll,
     AppStrings.catPatients,
@@ -15,13 +14,10 @@ class HomeCubit extends Cubit<HomeState> {
     AppStrings.catOrphans,
   ];
 
-  // ── تحميل البيانات
   Future<void> loadHome() async {
     emit(HomeLoading());
     try {
-      // TODO: استبدل بـ API call حقيقي من HomeRepository
       await Future.delayed(const Duration(milliseconds: 800));
-
       emit(
         HomeLoaded(
           volunteers: 12,
@@ -35,7 +31,6 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  // ── فلتر الكاتيغوري
   void filterByCategory(String category) {
     final current = state;
     if (current is HomeLoaded) {
@@ -43,7 +38,6 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  // ── البحث
   void search(String query) {
     final current = state;
     if (current is HomeLoaded) {
@@ -51,16 +45,5 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  // ── إعادة تعيين الفلتر
-  void resetFilter() {
-    final current = state;
-    if (current is HomeLoaded) {
-      emit(
-        current.copyWith(selectedCategory: AppStrings.catAll, searchQuery: ''),
-      );
-    }
-  }
-
-  // ── Refresh
   Future<void> refresh() => loadHome();
 }

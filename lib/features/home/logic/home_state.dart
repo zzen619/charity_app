@@ -2,7 +2,6 @@ import '../data/models/campaign_model.dart';
 
 abstract class HomeState {}
 
-// ── الحالات الأساسية
 class HomeInitial extends HomeState {}
 
 class HomeLoading extends HomeState {}
@@ -12,7 +11,6 @@ class HomeError extends HomeState {
   HomeError(this.message);
 }
 
-// ── الحالة الرئيسية بعد تحميل البيانات
 class HomeLoaded extends HomeState {
   final int volunteers;
   final int donors;
@@ -30,16 +28,11 @@ class HomeLoaded extends HomeState {
     this.searchQuery = '',
   });
 
-  // الحملات بعد تطبيق الفلتر والبحث
   List<CampaignModel> get filteredCampaigns {
     List<CampaignModel> result = allCampaigns;
-
-    // فلتر الكاتيغوري
     if (selectedCategory != 'All') {
       result = result.where((c) => c.category == selectedCategory).toList();
     }
-
-    // فلتر البحث
     if (searchQuery.trim().isNotEmpty) {
       final q = searchQuery.toLowerCase();
       result = result
@@ -50,7 +43,6 @@ class HomeLoaded extends HomeState {
           )
           .toList();
     }
-
     return result;
   }
 

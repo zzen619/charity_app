@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_text_styles.dart';
@@ -92,7 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      // Avatar
                       CircleAvatar(
                         radius: 26,
                         backgroundColor: Colors.white,
@@ -111,8 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 12),
-
-                      // Name
                       const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -126,10 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-
                       const Spacer(),
-
-                      // Menu icon
                       Builder(
                         builder: (ctx) => IconButton(
                           icon: const Icon(
@@ -146,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 20),
 
-                // Stats row
+                // Stats
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
@@ -175,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
 
-        // ── White/Dark curved body
+        // ── Body
         SliverToBoxAdapter(
           child: Container(
             decoration: BoxDecoration(
@@ -189,12 +182,10 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const SizedBox(height: 20),
 
-                // Search bar
-                SearchBarWidget(onChanged: (q) => cubit.search(q)),
+                SearchBarWidget(onChanged: cubit.search),
 
                 const SizedBox(height: 16),
 
-                // Category filter
                 _CategoryFilter(
                   categories: cubit.categories,
                   selected: state.selectedCategory,
@@ -204,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 20),
 
-                // ATAA watermark
+                // Watermark
                 Center(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -231,31 +222,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 20),
 
-                // Quick Donate button
-                QuickDonateButton(
-                  onTap: () {
-                    // TODO: navigate to quick donate
-                  },
-                ),
+                QuickDonateButton(onTap: () {}),
 
                 const SizedBox(height: 12),
 
-                // Donation Categories button
-                _DonationCategoriesButton(
-                  onTap: () {
-                    // TODO: navigate to donation categories
-                  },
-                ),
+                _DonationCategoriesButton(onTap: () {}),
 
                 const SizedBox(height: 24),
 
-                // Recent campaigns
+                // ✅ filteredCampaigns وليس campaigns
                 UrgentCampaignsList(
                   campaigns: state.filteredCampaigns,
                   selectedCategory: state.selectedCategory,
-                  onViewAll: () {
-                    // TODO: navigate to all campaigns
-                  },
+                  onViewAll: () {},
                 ),
 
                 const SizedBox(height: 24),
@@ -268,9 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ══════════════════════════════════════
-//  Stat Card
-// ══════════════════════════════════════
+// ── Stat Card
 class _StatCard extends StatelessWidget {
   final String label;
   final String value;
@@ -299,9 +276,7 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════
-//  Category Filter
-// ══════════════════════════════════════
+// ── Category Filter
 class _CategoryFilter extends StatelessWidget {
   final List<String> categories;
   final String selected;
@@ -323,8 +298,8 @@ class _CategoryFilter extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: categories.length,
-        itemBuilder: (context, index) {
-          final cat = categories[index];
+        itemBuilder: (context, i) {
+          final cat = categories[i];
           final isSelected = cat == selected;
 
           return GestureDetector(
@@ -362,9 +337,7 @@ class _CategoryFilter extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════
-//  Donation Categories Button
-// ══════════════════════════════════════
+// ── Donation Categories Button
 class _DonationCategoriesButton extends StatelessWidget {
   final VoidCallback? onTap;
 
@@ -372,8 +345,6 @@ class _DonationCategoriesButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GestureDetector(
@@ -386,7 +357,7 @@ class _DonationCategoriesButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(50),
             border: Border.all(color: AppColors.primary, width: 1.5),
           ),
-          child: Center(
+          child: const Center(
             child: Text(
               AppStrings.donationCategories,
               style: TextStyle(
