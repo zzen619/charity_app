@@ -4,9 +4,7 @@ import 'package:charity_app/main.dart';
 
 void main() {
   testWidgets('App launches successfully', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const AtaaApp(initialThemeMode: ThemeMode.light), // ✅ صحيح
-    );
+    await tester.pumpWidget(const AtaaApp(initialThemeMode: ThemeMode.light));
     expect(find.byType(MaterialApp), findsOneWidget);
   });
 }
