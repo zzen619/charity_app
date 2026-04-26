@@ -1,34 +1,44 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_text_styles.dart';
-import '../../data/models/campaign_model.dart';
+import '../../../../core/constants/app_theme_extensions.dart';
+import '../../../../core/widgets/custom_button.dart';
 
 class CampaignCard extends StatelessWidget {
-  final CampaignModel campaign;
+  final String title;
+  final String category;
+  final String image;
+  final double progress;
+  final double progressPercent;
+  final String goal;
   final VoidCallback? onDonateTap;
 
-  const CampaignCard({super.key, required this.campaign, this.onDonateTap});
-
-  String _formatAmount(double amount) {
-    return '\$${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')}';
-  }
+  const CampaignCard({
+    super.key,
+    required this.title,
+    required this.category,
+    required this.image,
+    required this.progress,
+    required this.progressPercent,
+    required this.goal,
+    this.onDonateTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardColor = isDark ? AppColors.darkCardBg : AppColors.lightCardBg;
-    final textColor = Theme.of(context).colorScheme.onSurface;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cs = Theme.of(context).colorScheme;
+    final ext = Theme.of(context).extension<AppThemeExtension>()!;
 
     return Container(
       width: 280,
       margin: const EdgeInsets.only(right: 16),
       decoration: BoxDecoration(
-        color: cardColor,
+        color: ext.cardBackground,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.07),
+            color: Colors.black.withOpacity(isDark ? 0.2 : 0.06),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -37,7 +47,7 @@ class CampaignCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Image + Category Badge
+          // 🔷 Image + Badge
           Stack(
             children: [
               ClipRRect(
@@ -45,24 +55,18 @@ class CampaignCard extends StatelessWidget {
                   top: Radius.circular(16),
                 ),
                 child: Image.network(
-                  campaign.imageUrl,
+                  image,
                   height: 150,
                   width: double.infinity,
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Container(
                     height: 150,
-                    color: isDark
-                        ? AppColors.darkInputFill
-                        : AppColors.lightInputFill,
-                    child: Icon(
-                      Icons.image_outlined,
-                      color: isDark
-                          ? AppColors.darkTextHint
-                          : AppColors.lightTextHint,
-                    ),
+                    color: cs.surface,
+                    child: Icon(Icons.image_outlined, color: cs.onSurface),
                   ),
                 ),
               ),
+
               Positioned(
                 top: 12,
                 right: 12,
@@ -72,19 +76,23 @@ class CampaignCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: cs.surface.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
-                    campaign.category.toUpperCase(),
-                    style: AppTextStyles.cardCategory,
+                    category.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: cs.onSurface,
+                    ),
                   ),
                 ),
               ),
             ],
           ),
 
-          // ── Content
+          // 🔷 Content
           Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -92,53 +100,56 @@ class CampaignCard extends StatelessWidget {
               children: [
                 // Title
                 Text(
-                  campaign.title,
-                  style: AppTextStyles.cardTitle.copyWith(color: textColor),
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: cs.onSurface,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
 
                 const SizedBox(height: 10),
 
-                // Progress label row
+                // Progress Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      AppStrings.progress,
-                      style: AppTextStyles.progressLabel.copyWith(
-                        color: isDark
-                            ? AppColors.darkTextSecond
-                            : const Color(0xFF9E9E9E),
+                      'progress'.tr(),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: cs.onSurface.withOpacity(0.6),
                       ),
                     ),
                     Text(
-                      '${(campaign.progress * 100).toInt()}%',
-                      style: AppTextStyles.progressValue,
+                      '${progressPercent.toInt()}%',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: cs.secondary,
+                      ),
                     ),
                   ],
                 ),
 
                 const SizedBox(height: 6),
 
-                // Progress bar
+                // Progress Bar
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: LinearProgressIndicator(
-                    value: campaign.progress,
-                    backgroundColor: isDark
-                        ? AppColors.darkBorder
-                        : AppColors.progressBg,
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      AppColors.progressFill,
-                    ),
+                    value: progress,
+                    backgroundColor: cs.surface,
+                    valueColor: AlwaysStoppedAnimation(cs.secondary),
                     minHeight: 6,
                   ),
                 ),
 
                 const SizedBox(height: 12),
 
-                // Goal + Donate Button
+                // Goal + Button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -146,37 +157,29 @@ class CampaignCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          AppStrings.goal,
-                          style: AppTextStyles.goalLabel.copyWith(
-                            color: isDark
-                                ? AppColors.darkTextHint
-                                : const Color(0xFF9E9E9E),
+                          'goal'.tr(),
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: cs.onSurface.withOpacity(0.6),
                           ),
                         ),
                         Text(
-                          _formatAmount(campaign.goal),
-                          style: AppTextStyles.goalValue.copyWith(
-                            color: textColor,
+                          goal,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: cs.onSurface,
                           ),
                         ),
                       ],
                     ),
-                    GestureDetector(
+
+                    CustomButton(
+                      label: 'donate_now'.tr(),
                       onTap: onDonateTap,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.accent,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Text(
-                          AppStrings.donateNow,
-                          style: AppTextStyles.donateBtn,
-                        ),
-                      ),
+                      width: 110,
+                      height: 38,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
                   ],
                 ),

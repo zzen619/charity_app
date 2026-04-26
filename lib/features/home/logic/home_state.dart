@@ -15,52 +15,38 @@ class HomeLoaded extends HomeState {
   final int volunteers;
   final int donors;
   final int beneficiaries;
-  final List<CampaignModel> allCampaigns;
+  final List<CampaignModel> campaigns;
   final String selectedCategory;
-  final String searchQuery;
 
   HomeLoaded({
     required this.volunteers,
     required this.donors,
     required this.beneficiaries,
-    required this.allCampaigns,
+    required this.campaigns,
     this.selectedCategory = 'All',
-    this.searchQuery = '',
+    required List<CampaignModel> filteredCampaigns,
   });
 
   List<CampaignModel> get filteredCampaigns {
-    List<CampaignModel> result = allCampaigns;
-    if (selectedCategory != 'All') {
-      result = result.where((c) => c.category == selectedCategory).toList();
-    }
-    if (searchQuery.trim().isNotEmpty) {
-      final q = searchQuery.toLowerCase();
-      result = result
-          .where(
-            (c) =>
-                c.title.toLowerCase().contains(q) ||
-                c.category.toLowerCase().contains(q),
-          )
-          .toList();
-    }
-    return result;
+    if (selectedCategory == 'All') return campaigns;
+    return campaigns.where((c) => c.category == selectedCategory).toList();
   }
 
   HomeLoaded copyWith({
     int? volunteers,
     int? donors,
     int? beneficiaries,
-    List<CampaignModel>? allCampaigns,
+    List<CampaignModel>? campaigns,
+    List<CampaignModel>? filteredCampaigns,
     String? selectedCategory,
-    String? searchQuery,
   }) {
     return HomeLoaded(
       volunteers: volunteers ?? this.volunteers,
       donors: donors ?? this.donors,
       beneficiaries: beneficiaries ?? this.beneficiaries,
-      allCampaigns: allCampaigns ?? this.allCampaigns,
+      campaigns: campaigns ?? this.campaigns,
+      filteredCampaigns: filteredCampaigns ?? this.filteredCampaigns,
       selectedCategory: selectedCategory ?? this.selectedCategory,
-      searchQuery: searchQuery ?? this.searchQuery,
     );
   }
 }

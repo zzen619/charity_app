@@ -1,13 +1,19 @@
+import 'package:charity_app/core/constants/app_colors.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_text_styles.dart';
+
+import '../../../../core/constants/app_theme/theme_cubit.dart';
+import '../../../../core/constants/app_theme/theme_state.dart';
+import '../../../../core/widgets/custom_button.dart';
 import '../../logic/home_cubit.dart';
 import '../../logic/home_state.dart';
+
+import '../widgets/campaign_card.dart';
+import '../widgets/category_tabs.dart';
 import '../widgets/quick_donate_button.dart';
 import '../widgets/search_bar_widget.dart';
-import '../widgets/urgent_campaigns_list.dart';
+import '../widgets/stats_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,47 +31,41 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      drawerScrimColor: Colors.black.withOpacity(0.6),
+      backgroundColor: cs.background,
+      drawer: const AppDrawer(),
+
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
-            );
+            return Center(child: CircularProgressIndicator(color: cs.primary));
           }
+
           if (state is HomeError) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                  Icon(Icons.error_outline, color: cs.error, size: 48),
                   const SizedBox(height: 12),
-                  Text(
-                    state.message,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
+                  Text(state.message, style: TextStyle(color: cs.onSurface)),
                   const SizedBox(height: 12),
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
                     onPressed: () => context.read<HomeCubit>().loadHome(),
-                    child: const Text(AppStrings.retryBtn),
+                    child: const Text('Retry'),
                   ),
                 ],
               ),
             );
           }
+
           if (state is HomeLoaded) {
             return _buildBody(context, state);
           }
+
           return const SizedBox();
         },
       ),
@@ -73,108 +73,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody(BuildContext context, HomeLoaded state) {
-    final cubit = context.read<HomeCubit>();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cs = Theme.of(context).colorScheme;
 
     return CustomScrollView(
       slivers: [
-        // ── Teal Header
-        SliverToBoxAdapter(
-          child: Container(
-            color: AppColors.primary,
-            child: Column(
-              children: [
-                const SizedBox(height: 52),
+        SliverToBoxAdapter(child: _buildHeader(context, state)),
 
-                // Top bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 26,
-                        backgroundColor: Colors.white,
-                        child: ClipOval(
-                          child: Image.network(
-                            'https://i.pravatar.cc/150?img=3',
-                            fit: BoxFit.cover,
-                            width: 52,
-                            height: 52,
-                            errorBuilder: (_, __, ___) => const Icon(
-                              Icons.person,
-                              color: AppColors.primary,
-                              size: 28,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppStrings.welcomeBack,
-                            style: AppTextStyles.welcomeLabel,
-                          ),
-                          Text(
-                            AppStrings.userName,
-                            style: AppTextStyles.userName,
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Builder(
-                        builder: (ctx) => IconButton(
-                          icon: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                          onPressed: () => Scaffold.of(ctx).openDrawer(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Stats
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      _StatCard(
-                        label: AppStrings.volunteers,
-                        value: '${state.volunteers}',
-                      ),
-                      const SizedBox(width: 10),
-                      _StatCard(
-                        label: AppStrings.donors,
-                        value: '${state.donors}',
-                      ),
-                      const SizedBox(width: 10),
-                      _StatCard(
-                        label: AppStrings.beneficiaries,
-                        value: '${state.beneficiaries}',
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 28),
-              ],
-            ),
-          ),
-        ),
-
-        // ── Body
         SliverToBoxAdapter(
           child: Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
+              color: cs.surface,
               borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(28),
+                top: Radius.circular(20),
               ),
             ),
             child: Column(
@@ -182,38 +92,49 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const SizedBox(height: 20),
 
-                SearchBarWidget(onChanged: cubit.search),
+                // 🔍 Search
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: AppSearchBar(
+                    hintText: 'search_hint'.tr(),
+                    onChanged: (query) =>
+                        context.read<HomeCubit>().filterBySearch(query),
+                  ),
+                ),
 
                 const SizedBox(height: 16),
 
-                _CategoryFilter(
-                  categories: cubit.categories,
-                  selected: state.selectedCategory,
-                  onSelect: cubit.filterByCategory,
-                  isDark: isDark,
+                // 📂 Categories
+                CategoryTabs(
+                  categories: context
+                      .read<HomeCubit>()
+                      .categoriesKeys
+                      .map((e) => e.tr())
+                      .toList(),
+                  selected: state.selectedCategory.tr(),
+                  onSelect: context.read<HomeCubit>().filterByCategory,
                 ),
 
                 const SizedBox(height: 20),
 
-                // Watermark
+                // 🔰 Brand
                 Center(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
                         Icons.handshake_outlined,
-                        color: isDark
-                            ? Colors.white12
-                            : const Color(0xFFDDDDDD),
+                        color: Colors.black12,
                         size: 28,
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        AppStrings.appName,
-                        style: AppTextStyles.watermark.copyWith(
-                          color: isDark
-                              ? Colors.white12
-                              : const Color(0xFFDDDDDD),
+                        'ATAA',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 4,
+                          color: Colors.black12,
                         ),
                       ),
                     ],
@@ -222,19 +143,60 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 20),
 
-                QuickDonateButton(onTap: () {}),
-
-                const SizedBox(height: 12),
-
-                _DonationCategoriesButton(onTap: () {}),
+                // ⚡ Quick donate
+                QuickDonateButton(onTap: () {}, label: 'quick_donate'.tr()),
 
                 const SizedBox(height: 24),
 
-                // ✅ filteredCampaigns وليس campaigns
-                UrgentCampaignsList(
-                  campaigns: state.filteredCampaigns,
-                  selectedCategory: state.selectedCategory,
-                  onViewAll: () {},
+                // 📌 Title row
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'recent_campaigns'.tr(),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: cs.onSurface,
+                        ),
+                      ),
+                      Text(
+                        'view_all'.tr(),
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: cs.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // 🏷 Campaigns
+                SizedBox(
+                  height: 310,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.only(left: 16),
+                    itemCount: state.filteredCampaigns.length,
+                    itemBuilder: (context, i) {
+                      final campaign = state.filteredCampaigns[i];
+
+                      return CampaignCard(
+                        title: campaign.title,
+                        category: campaign.category,
+                        image: campaign.imageUrl,
+                        progress: campaign.progress,
+                        progressPercent: campaign.progressPercent,
+                        goal: campaign.formattedGoal,
+                        onDonateTap: () {},
+                      );
+                    },
+                  ),
                 ),
 
                 const SizedBox(height: 24),
@@ -245,30 +207,216 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
+
+  Widget _buildHeader(BuildContext context, HomeLoaded state) {
+    final cs = Theme.of(context).colorScheme;
+
+    return Container(
+      color: cs.primary,
+      child: Column(
+        children: [
+          const SizedBox(height: 52),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                const CircleAvatar(
+                  radius: 26,
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.person, color: Colors.blue),
+                ),
+                const SizedBox(width: 12),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'welcome_back'.tr(),
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.7),
+                        fontSize: 11,
+                      ),
+                    ),
+                    const Text(
+                      'Marwa Alsaour',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const Spacer(),
+
+                Builder(
+                  builder: (ctx) => IconButton(
+                    icon: const Icon(Icons.menu, color: Colors.white),
+                    onPressed: () => Scaffold.of(ctx).openDrawer(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                StatsCard(
+                  label: 'volunteers'.tr(),
+                  value: '${state.volunteers}',
+                ),
+                const SizedBox(width: 10),
+                StatsCard(label: 'donors'.tr(), value: '${state.donors}'),
+                const SizedBox(width: 10),
+                StatsCard(
+                  label: 'beneficiaries'.tr(),
+                  value: '${state.beneficiaries}',
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 28),
+        ],
+      ),
+    );
+  }
 }
 
-// ── Stat Card
-class _StatCard extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _StatCard({required this.label, required this.value});
+class AppDrawer extends StatelessWidget {
+  const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-        decoration: BoxDecoration(
-          color: AppColors.primaryLight,
-          borderRadius: BorderRadius.circular(14),
-        ),
+    final cs = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Drawer(
+      backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+      child: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: AppTextStyles.statLabel),
-            const SizedBox(height: 4),
-            Text(value, style: AppTextStyles.statValue),
+            // 🔷 Header
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
+              color: AppColors.primary,
+              child: Text(
+                'app_name'.tr(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            // 📂 Menu Items
+            _DrawerItem(
+              icon: Icons.verified_user_outlined,
+              title: 'transparency_file'.tr(),
+              onTap: () {},
+            ),
+
+            const Divider(height: 1),
+
+            _DrawerItem(
+              icon: Icons.info_outline,
+              title: 'about_association'.tr(),
+              onTap: () {},
+            ),
+
+            const Divider(height: 1),
+
+            _DrawerItem(
+              icon: Icons.contact_mail_outlined,
+              title: 'contact_us'.tr(),
+              onTap: () {},
+            ),
+
+            const Divider(height: 1),
+
+            const SizedBox(height: 8),
+
+            // 🌙 Theme Toggle
+            BlocBuilder<ThemeCubit, ThemeState>(
+              builder: (context, state) {
+                final isDarkMode = state.mode == ThemeMode.dark;
+
+                return SwitchListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                  secondary: Icon(
+                    isDarkMode
+                        ? Icons.dark_mode_rounded
+                        : Icons.light_mode_rounded,
+                    color: cs.primary,
+                  ),
+                  title: Text(
+                    'dark_mode'.tr(),
+                    style: TextStyle(color: cs.onSurface),
+                  ),
+                  value: isDarkMode,
+                  activeColor: AppColors.accent,
+                  onChanged: (_) => context.read<ThemeCubit>().toggle(),
+                );
+              },
+            ),
+
+            const Divider(height: 1),
+
+            // 🌐 Language Switch
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              leading: Icon(Icons.language, color: cs.primary),
+              title: Text(
+                'language'.tr(),
+                style: TextStyle(color: cs.onSurface),
+              ),
+              trailing: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: cs.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  context.locale.languageCode.toUpperCase(),
+                  style: TextStyle(
+                    color: cs.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              onTap: () {
+                final current = context.locale.languageCode;
+                if (current == 'ar') {
+                  context.setLocale(const Locale('en'));
+                } else {
+                  context.setLocale(const Locale('ar'));
+                }
+              },
+            ),
+
+            const Spacer(),
+
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: CustomButton(
+                label: 'volunteer_with_us'.tr(),
+                icon: Icons.volunteer_activism,
+                onTap: () {},
+              ),
+            ),
           ],
         ),
       ),
@@ -276,99 +424,33 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-// ── Category Filter
-class _CategoryFilter extends StatelessWidget {
-  final List<String> categories;
-  final String selected;
-  final ValueChanged<String> onSelect;
-  final bool isDark;
+class _DrawerItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
 
-  const _CategoryFilter({
-    required this.categories,
-    required this.selected,
-    required this.onSelect,
-    required this.isDark,
+  const _DrawerItem({
+    required this.icon,
+    required this.title,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: categories.length,
-        itemBuilder: (context, i) {
-          final cat = categories[i];
-          final isSelected = cat == selected;
+    final cs = Theme.of(context).colorScheme;
 
-          return GestureDetector(
-            onTap: () => onSelect(cat),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              margin: const EdgeInsets.only(right: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppColors.primary
-                    : (isDark ? AppColors.darkSurface : Colors.white),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isSelected
-                      ? AppColors.primary
-                      : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
-                ),
-              ),
-              child: Text(
-                cat,
-                style: isSelected
-                    ? AppTextStyles.categoryChipSelected
-                    : AppTextStyles.categoryChipUnselected.copyWith(
-                        color: isDark
-                            ? AppColors.darkTextSecond
-                            : AppColors.lightTextSecond,
-                      ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-// ── Donation Categories Button
-class _DonationCategoriesButton extends StatelessWidget {
-  final VoidCallback? onTap;
-
-  const _DonationCategoriesButton({this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(color: AppColors.primary, width: 1.5),
-          ),
-          child: const Center(
-            child: Text(
-              AppStrings.donationCategories,
-              style: TextStyle(
-                color: AppColors.primary,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      leading: Icon(icon, color: cs.primary),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: cs.onSurface,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
         ),
       ),
+      onTap: onTap,
     );
   }
 }

@@ -17,6 +17,9 @@ class CampaignModel {
     required this.raised,
   });
 
+  double get progressPercent => progress * 100;
+
+  String get formattedGoal => '\$${goal.toStringAsFixed(0)}';
   factory CampaignModel.fromJson(Map<String, dynamic> json) {
     final double goal = (json['goal'] as num).toDouble();
     final double raised = (json['raised'] as num).toDouble();

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/app_colors.dart';
-import '../core/constants/app_theme/theme_cubit.dart';
-import '../core/constants/app_theme/theme_state.dart';
 import '../features/home/ui/screens/home_screen.dart';
 import 'main_navigation_cubit.dart';
 
@@ -22,21 +20,7 @@ class MainNavigationScreen extends StatelessWidget {
     return BlocBuilder<MainNavigationCubit, MainNavigationState>(
       builder: (context, navState) {
         return Scaffold(
-          drawer: _AppDrawer(),
           body: IndexedStack(index: navState.currentIndex, children: _screens),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              // TODO: Navigate to submit request screen
-            },
-            backgroundColor: AppColors.accent,
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: const Icon(Icons.add, color: Colors.black87, size: 28),
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: _BottomNavBar(
             currentIndex: navState.currentIndex,
             onTap: context.read<MainNavigationCubit>().changeTab,
@@ -70,6 +54,7 @@ class _BottomNavBar extends StatelessWidget {
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
+
           children: [
             _NavItem(
               icon: Icons.home_rounded,
@@ -85,7 +70,26 @@ class _BottomNavBar extends StatelessWidget {
               current: currentIndex,
               onTap: onTap,
             ),
-            const SizedBox(width: 48),
+
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true, // مهم لو فيه input
+                  backgroundColor: Colors.transparent, // عشان نتحكم بالشكل
+                  builder: (context) => const _AddBottomSheet(),
+                );
+              },
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppColors.accent,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(Icons.add, color: Colors.black87),
+              ),
+            ),
             _NavItem(
               icon: Icons.volunteer_activism_rounded,
               label: 'IMPACT',
@@ -157,199 +161,98 @@ class _NavItem extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════
-//  App Drawer
-// ══════════════════════════════════════
-class _AppDrawer extends StatelessWidget {
+class _AddBottomSheet extends StatelessWidget {
+  const _AddBottomSheet();
+
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Drawer(
-      backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-      child: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-              color: AppColors.primary,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const CircleAvatar(
-                    radius: 32,
-                    backgroundColor: Colors.white24,
-                    child: Icon(Icons.person, color: Colors.white, size: 36),
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'Marwa Alsaour',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'marwa@email.com',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 🔘 handle
+          Container(
+            width: 40,
+            height: 4,
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              color: Colors.grey.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(2),
             ),
+          ),
 
-            const SizedBox(height: 8),
+          const Text(
+            'Choose Action',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          ),
 
-            // Menu Items
-            _DrawerItem(
-              icon: Icons.home_rounded,
-              label: 'Home',
-              onTap: () => Navigator.pop(context),
-            ),
-            _DrawerItem(
-              icon: Icons.info_outline_rounded,
-              label: 'About ATAA',
-              onTap: () {},
-            ),
-            _DrawerItem(
-              icon: Icons.contact_support_outlined,
-              label: 'Contact Us',
-              onTap: () {},
-            ),
-            _DrawerItem(
-              icon: Icons.privacy_tip_outlined,
-              label: 'Privacy Policy',
-              onTap: () {},
-            ),
+          const SizedBox(height: 20),
 
-            const Divider(indent: 16, endIndent: 16),
+          _SheetItem(
+            icon: Icons.volunteer_activism_rounded,
+            title: 'Create Campaign',
+            onTap: () {
+              Navigator.pop(context);
+              // TODO: navigate
+            },
+          ),
 
-            // Theme Toggle
-            BlocBuilder<ThemeCubit, ThemeState>(
-              builder: (context, themeState) {
-                final isDarkMode = themeState.mode == ThemeMode.dark;
-                return SwitchListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                  secondary: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: Icon(
-                      isDarkMode
-                          ? Icons.light_mode_rounded
-                          : Icons.dark_mode_rounded,
-                      key: ValueKey(isDarkMode),
-                      color: cs.primary,
-                    ),
-                  ),
-                  title: Text(
-                    isDarkMode ? 'Light Mode' : 'Dark Mode',
-                    style: TextStyle(
-                      color: cs.onSurface,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  value: isDarkMode,
-                  activeColor: AppColors.accent,
-                  onChanged: (_) => context.read<ThemeCubit>().toggle(),
-                );
-              },
-            ),
+          _SheetItem(
+            icon: Icons.request_page_rounded,
+            title: 'Submit Request',
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
 
-            // Language Toggle
-            ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-              leading: Icon(Icons.language_rounded, color: cs.primary),
-              title: Text(
-                'Language',
-                style: TextStyle(
-                  color: cs.onSurface,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              trailing: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: cs.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'EN',
-                  style: TextStyle(
-                    color: cs.primary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              onTap: () {
-                // TODO: implement locale cubit
-              },
-            ),
+          _SheetItem(
+            icon: Icons.favorite_rounded,
+            title: 'Quick Donate',
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
 
-            const Spacer(),
-
-            // Logout
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: ListTile(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: cs.error.withOpacity(0.3)),
-                ),
-                leading: Icon(Icons.logout_rounded, color: cs.error),
-                title: Text(
-                  'Logout',
-                  style: TextStyle(
-                    color: cs.error,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                onTap: () {},
-              ),
-            ),
-          ],
-        ),
+          const SizedBox(height: 10),
+        ],
       ),
     );
   }
 }
 
-class _DrawerItem extends StatelessWidget {
+class _SheetItem extends StatelessWidget {
   final IconData icon;
-  final String label;
+  final String title;
   final VoidCallback onTap;
 
-  const _DrawerItem({
+  const _SheetItem({
     required this.icon,
-    required this.label,
+    required this.title,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      leading: Icon(icon, color: cs.primary, size: 22),
-      title: Text(
-        label,
-        style: TextStyle(
-          color: cs.onSurface,
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      leading: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: cs.primary.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(10),
         ),
+        child: Icon(icon, color: cs.primary),
       ),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       onTap: onTap,
     );
   }

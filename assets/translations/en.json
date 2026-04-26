@@ -1,0 +1,26 @@
+{
+  "app_name": "ATAA",
+  "home": "Home",
+  "welcome_back": "WELCOME BACK",
+  "quick_donate": "Quick Donate",
+  "recent_campaigns": "Recent Campaigns",
+  "view_all": "View all",
+  "search_hint": "Search for campaigns",
+  "volunteers": "VOLUNTEERS",
+  "donors": "DONORS",
+  "beneficiaries": "BENEFICIARIES",
+  "transparency_file": "Transparency File",
+  "about_association": "About the Association",
+  "contact_us": "Contact Us",
+  "dark_mode": "Dark Mode",
+  "language": "Language",
+  "volunteer_with_us": "Volunteer with Us",
+
+  "categories": {
+    "all": "All",
+    "patients": "Patients",
+    "education": "Education",
+    "environment": "Environment",
+    "orphans": "Orphans"
+  }
+}

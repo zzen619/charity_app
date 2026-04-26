@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,13 +12,21 @@ import 'main_navigation/main_navigation_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
 
   // تحميل الثيم المحفوظ قبل تشغيل التطبيق
   final prefs = await SharedPreferences.getInstance();
   final savedTheme = prefs.getString('theme_mode');
   final initialMode = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light;
 
-  runApp(AtaaApp(initialThemeMode: initialMode));
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('ar')],
+      path: 'assets/translations', // مجلد ملفات الترجمة
+      fallbackLocale: const Locale('en'),
+      child: AtaaApp(initialThemeMode: initialMode),
+    ),
+  );
 }
 
 class AtaaApp extends StatelessWidget {
@@ -40,6 +49,11 @@ class AtaaApp extends StatelessWidget {
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeState?.mode,
+
+            locale: context.locale,
+            supportedLocales: context.supportedLocales,
+            localizationsDelegates: context.localizationDelegates,
+
             home: const MainNavigationScreen(),
           );
         },

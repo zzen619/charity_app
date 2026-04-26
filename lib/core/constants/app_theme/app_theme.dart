@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../app_colors.dart';
+import '../app_theme_extensions.dart';
 
 class AppTheme {
   AppTheme._();
@@ -11,7 +12,6 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.light,
     fontFamily: 'Inter',
-
     colorScheme: const ColorScheme.light(
       primary: AppColors.primary,
       secondary: AppColors.accent,
@@ -22,6 +22,17 @@ class AppTheme {
       onSurface: AppColors.lightTextPrimary,
     ),
 
+    extensions: const [
+      AppThemeExtension(
+        cardBackground: AppColors.lightCardBg,
+        inputFill: AppColors.lightInputFill,
+        border: AppColors.lightBorder,
+        textSecondary: AppColors.lightTextSecond,
+        textHint: AppColors.lightTextHint,
+        progressBg: AppColors.progressBg,
+        progressFill: AppColors.progressFill,
+      ),
+    ],
     scaffoldBackgroundColor: AppColors.lightBackground,
 
     appBarTheme: const AppBarTheme(
@@ -101,6 +112,17 @@ class AppTheme {
       onSurface: AppColors.darkTextPrimary,
     ),
 
+    extensions: const [
+      AppThemeExtension(
+        cardBackground: AppColors.darkCardBg,
+        inputFill: AppColors.darkInputFill,
+        border: AppColors.darkBorder,
+        textSecondary: AppColors.darkTextSecond,
+        textHint: AppColors.darkTextHint,
+        progressBg: AppColors.darkBorder,
+        progressFill: AppColors.accent,
+      ),
+    ],
     scaffoldBackgroundColor: AppColors.darkBackground,
 
     appBarTheme: const AppBarTheme(

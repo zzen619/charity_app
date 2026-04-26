@@ -11,6 +11,11 @@ class CustomButton extends StatelessWidget {
   final bool isLoading;
   final double? width;
 
+  // ✨ أضفناهم
+  final Color? backgroundColor;
+  final Color? textColor;
+  final double height;
+
   const CustomButton({
     super.key,
     required this.label,
@@ -19,15 +24,24 @@ class CustomButton extends StatelessWidget {
     this.icon,
     this.isLoading = false,
     this.width,
+    this.backgroundColor,
+    this.textColor,
+    this.height = 48, // 👈 default height
   });
 
   @override
   Widget build(BuildContext context) {
     final isFilled = variant == ButtonVariant.filled;
-    final bg = isFilled ? AppColors.accent : Colors.transparent;
-    final fgColor = isFilled
-        ? AppColors.lightTextPrimary
-        : Theme.of(context).colorScheme.primary;
+
+    final bg =
+        backgroundColor ?? (isFilled ? AppColors.accent : Colors.transparent);
+
+    final fgColor =
+        textColor ??
+        (isFilled
+            ? AppColors.lightTextHint
+            : Theme.of(context).colorScheme.primary);
+
     final border = isFilled
         ? null
         : Border.all(color: Theme.of(context).colorScheme.primary, width: 1.5);
@@ -39,41 +53,41 @@ class CustomButton extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         child: Container(
           width: width ?? double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          height: height, // 👈 مهم
           decoration: BoxDecoration(
             color: bg,
             borderRadius: BorderRadius.circular(50),
             border: border,
           ),
-          child: isLoading
-              ? Center(
-                  child: SizedBox(
+          child: Center(
+            child: isLoading
+                ? SizedBox(
                     width: 22,
                     height: 22,
                     child: CircularProgressIndicator(
                       strokeWidth: 2.5,
                       color: fgColor,
                     ),
-                  ),
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(icon, color: fgColor, size: 20),
-                      const SizedBox(width: 8),
-                    ],
-                    Text(
-                      label,
-                      style: TextStyle(
-                        color: fgColor,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3,
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (icon != null) ...[
+                        Icon(icon, color: fgColor, size: 20),
+                        const SizedBox(width: 8),
+                      ],
+                      Text(
+                        label,
+                        style: TextStyle(
+                          color: fgColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.3,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+          ),
         ),
       ),
     );

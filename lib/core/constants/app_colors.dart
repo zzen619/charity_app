@@ -16,7 +16,7 @@ class AppColors {
   static const Color lightInputFill = Color(0xFFF0F0F0);
   static const Color lightTextPrimary = Color(0xFF1A1A1A);
   static const Color lightTextSecond = Color(0xFF6B6B6B);
-  static const Color lightTextHint = Color(0xFFAAAAAA);
+  static const Color lightTextHint = Color(0xFFFFFFFF);
   static const Color lightBorder = Color(0xFFE0E0E0);
   static const Color lightCardBg = Color(0xFFFFFFFF);
   static const Color lightStatCard = Color(0xFF1E6B5E);
