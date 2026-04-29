@@ -81,18 +81,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
         SliverToBoxAdapter(
           child: Container(
-            decoration: BoxDecoration(
-              color: cs.surface,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
+            decoration: BoxDecoration(color: cs.surface),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 20),
 
-                // 🔍 Search
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: AppSearchBar(
@@ -117,7 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 20),
 
-                // 🔰 Brand
                 Center(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -212,11 +205,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final cs = Theme.of(context).colorScheme;
 
     return Container(
-      color: cs.primary,
+      decoration: BoxDecoration(
+        color: cs.primary,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+      ),
+
       child: Column(
         children: [
           const SizedBox(height: 52),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(

@@ -13,7 +13,7 @@ class AppSearchBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: ext.inputFill,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [],
       ),
       child: TextField(

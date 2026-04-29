@@ -1,39 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
-import '../features/home/ui/screens/home_screen.dart';
-import 'main_navigation_cubit.dart';
+import '../core/router/app_routes.dart';
 
 class MainNavigationScreen extends StatelessWidget {
-  const MainNavigationScreen({super.key});
+  final Widget child;
 
-  static const List<Widget> _screens = [
-    HomeScreen(),
-    Placeholder(), // NotificationsScreen()
-    Placeholder(), // RequestsHubScreen()
-    Placeholder(), // DonationsScreen()
-    Placeholder(), // ProfileScreen()
-  ];
+  const MainNavigationScreen({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MainNavigationCubit, MainNavigationState>(
-      builder: (context, navState) {
-        return Scaffold(
-          body: IndexedStack(index: navState.currentIndex, children: _screens),
-          bottomNavigationBar: _BottomNavBar(
-            currentIndex: navState.currentIndex,
-            onTap: context.read<MainNavigationCubit>().changeTab,
-          ),
-        );
-      },
+    final location = GoRouterState.of(context).uri.toString();
+
+    int currentIndex = 0;
+
+    if (location.startsWith(AppRoutes.home)) {
+      currentIndex = 0;
+    } else if (location.startsWith(AppRoutes.notifications)) {
+      currentIndex = 1;
+    } else if (location.startsWith(AppRoutes.requests)) {
+      currentIndex = 2;
+    } else if (location.startsWith(AppRoutes.campaigns)) {
+      currentIndex = 3;
+    } else if (location.startsWith(AppRoutes.profile)) {
+      currentIndex = 4;
+    }
+
+    return Scaffold(
+      body: child, // 🔥 أهم تغيير
+
+      bottomNavigationBar: _BottomNavBar(
+        currentIndex: currentIndex,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              context.go(AppRoutes.home);
+              break;
+            case 1:
+              context.go(AppRoutes.notifications);
+              break;
+            case 2:
+              context.go(AppRoutes.requests);
+              break;
+            case 3:
+              context.go(AppRoutes.campaigns);
+              break;
+            case 4:
+              context.go(AppRoutes.profile);
+              break;
+          }
+        },
+      ),
     );
   }
 }
 
-// ══════════════════════════════════════
-//  Bottom Nav Bar
-// ══════════════════════════════════════
 class _BottomNavBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -54,7 +75,6 @@ class _BottomNavBar extends StatelessWidget {
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-
           children: [
             _NavItem(
               icon: Icons.home_rounded,
@@ -75,8 +95,8 @@ class _BottomNavBar extends StatelessWidget {
               onTap: () {
                 showModalBottomSheet(
                   context: context,
-                  isScrollControlled: true, // مهم لو فيه input
-                  backgroundColor: Colors.transparent, // عشان نتحكم بالشكل
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
                   builder: (context) => const _AddBottomSheet(),
                 );
               },
@@ -90,6 +110,7 @@ class _BottomNavBar extends StatelessWidget {
                 child: const Icon(Icons.add, color: Colors.black87),
               ),
             ),
+
             _NavItem(
               icon: Icons.volunteer_activism_rounded,
               label: 'IMPACT',
