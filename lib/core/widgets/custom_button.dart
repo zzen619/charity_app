@@ -10,6 +10,7 @@ class CustomButton extends StatelessWidget {
   final IconData? icon;
   final bool isLoading;
   final double? width;
+  
 
   // ✨ أضفناهم
   final Color? backgroundColor;
@@ -33,8 +34,8 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final isFilled = variant == ButtonVariant.filled;
 
-    final bg =
-        backgroundColor ?? (isFilled ? AppColors.accent : Colors.transparent);
+    final bg =Color(0xFF1E6B5E);
+  
 
     final fgColor =
         textColor ??

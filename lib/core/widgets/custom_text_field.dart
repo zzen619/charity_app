@@ -83,7 +83,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               hintStyle: TextStyle(
                 color: isDark
                     ? AppColors.darkTextHint
-                    : AppColors.lightTextHint,
+                    : AppColors.darkTextHint.withOpacity(0.8),
                 fontSize: 13,
               ),
               filled: true,

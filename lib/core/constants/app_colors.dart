@@ -7,7 +7,7 @@ class AppColors {
   static const Color primary = Color(0xFF1A5C52);
   static const Color primaryLight = Color(0xFF1E6B5E);
   static const Color primaryDark = Color(0xFF0F3D35);
-  static const Color accent = Color(0xFFF2C055);
+  static const Color accent = Color(0xFF0F3D35); // أخضر
   static const Color accentDark = Color(0xFFC8960C);
 
   // ── Light Mode
