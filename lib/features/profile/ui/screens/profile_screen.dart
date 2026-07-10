@@ -9,9 +9,9 @@ import '../../../../core/router/app_routes.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  ImageProvider<Object> buildProfileImage(String image) {
+  ImageProvider<Object>? buildProfileImage(String image) {
     if (image.isEmpty) {
-      return const AssetImage('assets/images/default_avatar.png');
+      return null;
     }
     if (image.startsWith('http')) {
       return NetworkImage(image);
@@ -56,6 +56,10 @@ class ProfileScreen extends StatelessWidget {
                           CircleAvatar(
                             radius: 50,
                             backgroundImage: buildProfileImage(state.image),
+                            backgroundColor: Colors.grey[300],
+                            child: buildProfileImage(state.image) == null
+                                ? const Icon(Icons.person, size: 40, color: Colors.white)
+                                : null,
                           ),
                           Container(
                             padding: const EdgeInsets.all(6),

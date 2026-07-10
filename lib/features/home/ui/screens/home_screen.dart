@@ -235,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const Text(
-                      'Marwa Alsaour',
+                      'Ahmed Zain El Din',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,

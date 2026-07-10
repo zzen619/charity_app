@@ -13,8 +13,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   void getProfile() {
     emit(
       ProfileLoaded(
-        name: "Marwa Alsaour",
-        image: "https://i.pravatar.cc/300",
+        name: "Ahmed Zain El Din",
+        image: "",
         walletBalance: 250.0,
         totalImpact: 12450,
         livesTouched: 84,
@@ -96,5 +96,10 @@ class ProfileCubit extends Cubit<ProfileState> {
         ),
       );
     }
+  }
+
+  /// 🚪 تسجيل الخروج
+  void logout() {
+    emit(ProfileLoading());
   }
 }

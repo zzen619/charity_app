@@ -1,0 +1,120 @@
+﻿[        ]              #14     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+[   +1 ms]              <asynchronous suspension>
+[        ]              #15     FlutterCommandRunner.runCommand (package:flutter_tools/src/runner/flutter_command_runner.dart:431:5)
+[        ]              <asynchronous suspension>
+[   +1 ms]              #16     FlutterCommandRunner.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:307:33)
+[        ]   [  +14 ms] "flutter assemble" took 73,080ms.
+[   +1 ms]              <asynchronous suspension>
+[   +1 ms]              #17     run.<anonymous closure>.<anonymous closure> (package:flutter_tools/runner.dart:104:11)
+[        ]              <asynchronous suspension>
+[        ]              #18     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+[        ]              <asynchronous suspension>
+[        ]              #19     main (package:flutter_tools/executable.dart:103:3)
+[        ]              <asynchronous suspension>
+[ +615 ms]   [ +653 ms] 
+[   +1 ms]              #0      throwToolExit (package:flutter_tools/src/base/common.dart:34:3)
+[   +5 ms]              #1      AssembleCommand.runCommand (package:flutter_tools/src/commands/assemble.dart:383:7)
+[   +3 ms]              <asynchronous suspension>
+[        ]              #2      FlutterCommand.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command.dart:1590:27)
+[   +4 ms]              <asynchronous suspension>
+[   +2 ms]              #3      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+[   +4 ms]              <asynchronous suspension>
+[   +1 ms]              #4      CommandRunner.runCommand (package:args/command_runner.dart:212:13)
+[   +3 ms]              <asynchronous suspension>
+[        ]              #5      FlutterCommandRunner.runCommand.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:496:9)
+[  +24 ms]              <asynchronous suspension>
+[   +7 ms]              #6      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+[        ]              <asynchronous suspension>
+[        ]              #7      FlutterCommandRunner.runCommand (package:flutter_tools/src/runner/flutter_command_runner.dart:431:5)
+[   +5 ms]              <asynchronous suspension>
+[        ]              #8      FlutterCommandRunner.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:307:33)
+[   +9 ms]              <asynchronous suspension>
+[        ]              #9      run.<anonymous closure>.<anonymous closure> (package:flutter_tools/runner.dart:104:11)
+[   +7 ms]              <asynchronous suspension>
+[   +2 ms]              #10     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+[        ]              <asynchronous suspension>
+[        ]              #11     main (package:flutter_tools/executable.dart:103:3)
+[        ]              <asynchronous suspension>
+[        ]   [   +1 ms] Running 1 shutdown hook
+[   +1 ms]   [  +15 ms] Shutdown hooks complete
+[ +256 ms]   [ +331 ms] exiting with code 1
+[ +440 ms] C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Micr
+osoft\VC\v170\Microsoft.CppCommon.targets(254,5): error MSB8066: Custom build 
+for 'C:\Users\DELL\Desktop\charity_app\build\windows\x64\CMakeFiles\89a5602dc56
+d67cfecdc2c373bb4b456\flutter_windows.dll.rule;C:\Users\DELL\Desktop\charity_ap
+p\build\windows\x64\CMakeFiles\30d2a02a2bc8083f5180c75fb573c0a8\flutter_assembl
+e.rule' exited with code 1. [C:\Users\DELL\Desktop\charity_app\build\windows\x6
+4\flutter\flutter_assemble.vcxproj]
+[  +55 ms] Done Building Project "C:\Users\DELL\Desktop\charity_app\build\windows\x64\flutter\flutter_assemble.vcxproj" (default targets) -- FAILED.
+[  +15 ms] Done Building Project "C:\Users\DELL\Desktop\charity_app\build\windows\x64\runner\charity_app.vcxproj" (default targets) -- FAILED.
+[ +722 ms] Done Building Project "C:\Users\DELL\Desktop\charity_app\build\windows\x64\ALL_BUILD.vcxproj" (default targets) -- FAILED.
+[   +3 ms] Done Building Project "C:\Users\DELL\Desktop\charity_app\build\windows\x64\INSTALL.vcxproj" (default targets) -- FAILED.
+[  +19 ms] Build FAILED.
+[   +2 ms] "C:\Users\DELL\Desktop\charity_app\build\windows\x64\INSTALL.vcxproj" (default target) (1) ->
+[   +2 ms] "C:\Users\DELL\Desktop\charity_app\build\windows\x64\ALL_BUILD.vcxproj" (default target) (3) ->
+[   +1 ms] "C:\Users\DELL\Desktop\charity_app\build\windows\x64\runner\charity_app.vcxproj" (default target) (4) ->
+[   +1 ms] "C:\Users\DELL\Desktop\charity_app\build\windows\x64\flutter\flutter_assemble.vcxproj" (default target) (5) ->
+[        ] (CustomBuild target) -> 
+[        ]   [+14204 ms] 
+lib/features/profile/ui/screens/profile_screen.dart(179,56): error GE5CFE876: 
+The method 'logout' isn't defined for the type 'ProfileCubit'. [C:\Users\DELL\D
+esktop\charity_app\build\windows\x64\flutter\flutter_assemble.vcxproj]
+[        ]   C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Mi
+crosoft\VC\v170\Microsoft.CppCommon.targets(254,5): error MSB8066: Custom 
+build for 'C:\Users\DELL\Desktop\charity_app\build\windows\x64\CMakeFiles\89a56
+02dc56d67cfecdc2c373bb4b456\flutter_windows.dll.rule;C:\Users\DELL\Desktop\char
+ity_app\build\windows\x64\CMakeFiles\30d2a02a2bc8083f5180c75fb573c0a8\flutter_a
+ssemble.rule' exited with code 1. [C:\Users\DELL\Desktop\charity_app\build\wind
+ows\x64\flutter\flutter_assemble.vcxproj]
+[        ]     0 Warning(s)
+[        ]     2 Error(s)
+[        ] Time Elapsed 00:01:21.39
+[ +119 ms] Building Windows application... (completed in 82.5s)
+[   +2 ms] "flutter windows" took 93,536ms.
+[ +524 ms] Build process failed.
+[   +9 ms] 
+           #0      throwToolExit 
+(package:flutter_tools/src/base/common.dart:34:3)
+           #1      _runBuild 
+(package:flutter_tools/src/windows/build_windows.dart:262:5)
+           <asynchronous suspension>
+           #2      buildWindows 
+(package:flutter_tools/src/windows/build_windows.dart:118:5)
+           <asynchronous suspension>
+           #3      BuildWindowsCommand.runCommand 
+(package:flutter_tools/src/commands/build_windows.dart:72:5)
+           <asynchronous suspension>
+           #4      FlutterCommand.run.<anonymous closure> 
+(package:flutter_tools/src/runner/flutter_command.dart:1590:27)
+           <asynchronous suspension>
+           #5      AppContext.run.<anonymous closure> 
+(package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #6      CommandRunner.runCommand 
+(package:args/command_runner.dart:212:13)
+           <asynchronous suspension>
+           #7      FlutterCommandRunner.runCommand.<anonymous closure> 
+(package:flutter_tools/src/runner/flutter_command_runner.dart:496:9)
+           <asynchronous suspension>
+           #8      AppContext.run.<anonymous closure> 
+(package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #9      FlutterCommandRunner.runCommand 
+(package:flutter_tools/src/runner/flutter_command_runner.dart:431:5)
+           <asynchronous suspension>
+           #10     FlutterCommandRunner.run.<anonymous closure> 
+(package:flutter_tools/src/runner/flutter_command_runner.dart:307:33)
+           <asynchronous suspension>
+           #11     run.<anonymous closure>.<anonymous closure> 
+(package:flutter_tools/runner.dart:104:11)
+           <asynchronous suspension>
+           #12     AppContext.run.<anonymous closure> 
+(package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #13     main (package:flutter_tools/executable.dart:103:3)
+           <asynchronous suspension>
+
+
+[   +2 ms] Running 1 shutdown hook
+[  +25 ms] Shutdown hooks complete
+[ +279 ms] exiting with code 1
