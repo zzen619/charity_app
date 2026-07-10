@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,16 @@ import '../../../../core/router/app_routes.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
+  ImageProvider<Object> buildProfileImage(String image) {
+    if (image.isEmpty) {
+      return const AssetImage('assets/images/default_avatar.png');
+    }
+    if (image.startsWith('http')) {
+      return NetworkImage(image);
+    }
+    return FileImage(File(image));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +55,7 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 50,
-                            backgroundImage: NetworkImage(state.image),
+                            backgroundImage: buildProfileImage(state.image),
                           ),
                           Container(
                             padding: const EdgeInsets.all(6),
@@ -164,7 +175,10 @@ class ProfileScreen extends StatelessWidget {
 
                       /// LOGOUT BUTTON
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          context.read<ProfileCubit>().logout();
+                          context.go(AppRoutes.login);
+                        },
                         child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(vertical: 16),
